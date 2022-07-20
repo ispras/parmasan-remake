@@ -87,6 +87,7 @@ enum update_status
 update_goal_chain (struct goaldep *goaldeps)
 {
   out = fopen ("dep_graph.txt", "w");
+  out_pid = fopen ("pid.txt", "w");
   int t = touch_flag, q = question_flag, n = just_print_flag;
   enum update_status status = us_none;
 
@@ -270,6 +271,7 @@ update_goal_chain (struct goaldep *goaldeps)
     }
 
   fclose (out);
+  fclose (out_pid);
   return status;
 }
 

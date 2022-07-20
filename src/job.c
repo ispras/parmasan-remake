@@ -34,6 +34,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.  */
 /* Default shell to use.  */
 const char *default_shell = "/bin/sh";
 int batch_mode_shell = 0;
+FILE *out_pid;
 
 #if defined (HAVE_SYS_WAIT_H) || defined (HAVE_UNION_WAIT)
 # include <sys/wait.h>
@@ -1278,6 +1279,7 @@ start_job_command (child_t *child,
 
       child->pid = child_execute_job ((struct childbase *)child,
                                       child->good_stdin, argv);
+      fprintf (out_pid, "%d: %s\n", child->pid, child->file->name);
 
       environ = parent_environ; /* Restore value child may have clobbered.  */
       jobserver_post_child (flags & COMMANDS_RECURSE);

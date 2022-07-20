@@ -19,6 +19,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #include "output.h"
 #include "trace.h"
+#include <stdio.h>
 
 /* Structure describing a running or dead child process.  */
 
@@ -91,5 +92,6 @@ void unblock_all_sigs (void);
 
 extern unsigned int job_slots_used;
 extern unsigned int jobserver_tokens;
+extern FILE *out_pid;
 
 #endif  /* _REMAKE_JOB_H_ */
