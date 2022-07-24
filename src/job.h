@@ -19,7 +19,6 @@ this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #include "output.h"
 #include "trace.h"
-#include <stdio.h>
 
 /* Structure describing a running or dead child process.  */
 

@@ -25,17 +25,15 @@ this program.  If not, see <http://www.gnu.org/licenses/>.  */
 #include "dep.h"
 #include "variable.h"
 #include "debug.h"
+#include "parmasan.h"
 
 #include <assert.h>
-#include <stdio.h>
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #else
 #include <sys/file.h>
 #endif
-
-static FILE *out;
 
 /* The test for circular dependencies is based on the 'updating' bit in
    'struct file'.  However, double colon targets have separate 'struct
@@ -86,8 +84,6 @@ static const char *library_search (const char *lib, FILE_TIMESTAMP *mtime_ptr);
 enum update_status
 update_goal_chain (struct goaldep *goaldeps)
 {
-  out = fopen ("dep_graph.txt", "w");
-  out_pid = fopen ("pid.txt", "w");
   int t = touch_flag, q = question_flag, n = just_print_flag;
   enum update_status status = us_none;
 
@@ -270,8 +266,6 @@ update_goal_chain (struct goaldep *goaldeps)
       just_print_flag = n;
     }
 
-  fclose (out);
-  fclose (out_pid);
   return status;
 }
 
@@ -638,7 +632,7 @@ update_file_1 (struct file *file, unsigned int depth,
                           || (mtime == NONEXISTENT_MTIME));
 
           lastd = d;
-          fprintf (out, "%s: %s\n", d->file->parent->name, d->file->name);
+          parmasan_socket_report_dependency(d->file->parent->name, d->file->name);
           d = d->next;
         }
     }

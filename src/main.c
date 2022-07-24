@@ -27,6 +27,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.  */
 #include "rule.h"
 #include "debug.h"
 #include "getopt.h"
+#include "parmasan.h"
 // debugger include(s)
 #include "cmd.h"
 
@@ -1665,6 +1666,10 @@ main (int argc, const char **argv, char **envp)
 
   define_variable_cname ("CURDIR", current_directory, o_file, 0);
 
+  /* Connect to parmasan daemon. */
+  open_parmasan_socket();
+  parmasan_socket_send_init_packet();
+
   /* Read any stdin makefiles into temporary files.  */
 
   if (makefiles != 0)
@@ -3291,6 +3296,9 @@ die (int status)
       err = (status != 0);
       while (job_slots_used > 0)
         reap_children (1, err, NULL);
+
+      /* Make sure to close the parmasan daemon socket */
+      parmasan_socket_deinitialize();
 
       /* Let the remote job module clean up its state.  */
       remote_cleanup ();
