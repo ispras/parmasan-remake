@@ -9,7 +9,7 @@
 #include <sys/un.h>
 #include <sys/unistd.h>
 
-static const char *PARMASAN_SOCKET_PATH = "/tmp/parmasan-socket.sock";
+static const char *PARMASAN_SOCKET_PATH = "\0parmasan-socket";
 static char *parmasan_socket_buffer = NULL;
 static int parmasan_socket_buffer_size = 0;
 static int parmasan_socket_buffer_capacity = 0;
@@ -43,11 +43,16 @@ open_parmasan_socket (void)
     }
 
   server_address.sun_family = AF_UNIX;
-  strcpy (server_address.sun_path, PARMASAN_SOCKET_PATH);
+  size_t path_length = strlen (PARMASAN_SOCKET_PATH + 1) + 1;
+
+  if (path_length >= sizeof (server_address.sun_path))
+    path_length = sizeof (server_address.sun_path) - 1;
+
+  memcpy (server_address.sun_path, PARMASAN_SOCKET_PATH, path_length);
 
   connection_result
       = connect (parmasan_socket, (struct sockaddr *)&server_address,
-                 sizeof (server_address));
+                 sizeof (server_address.sun_family) + path_length);
   if (connection_result < 0)
     {
       perror ("Failed to connect to parmasan daemon");
