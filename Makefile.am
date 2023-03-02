@@ -59,11 +59,12 @@ noinst_HEADERS = src/buildargv.h src/commands.h src/debug.h \
 				src/rule.h src/trace.h src/types.h src/variable.h src/vpath.h
 
 make_LDADD =	$(LIBOBJS) $(GUILE_LIBS) lib/libgnu.a $(GETLOADAVG_LIBS) \
-				libdebugger/libdebugger.a @LIBINTL@
+				libdebugger/libdebugger.a @LIBINTL@ $(PARMASAN_COMM_LIBS)
 
 localedir =	$(datadir)/locale
 
 AM_CPPFLAGS =	-Isrc -I$(top_srcdir)/src -Ilib -I$(top_srcdir)/libdebugger \
+    -I$(PARMASAN_COMM_DIR) \
 		-I$(top_srcdir)/libdebugger -DLIBDIR=\"$(libdir)\" \
 		-DINCLUDEDIR=\"$(includedir)\" -DLOCALEDIR=\"$(localedir)\"
 
