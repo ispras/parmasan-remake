@@ -42,7 +42,7 @@ open_parmasan_socket (void)
       return -1;
     }
 
-  return 1;
+  return 0;
 }
 
 int
