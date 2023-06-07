@@ -4,8 +4,10 @@
 
 #include "types.h"
 
+extern const char* parmasan_strategy;
 
-int open_parmasan_socket (void);
+void init_parmasan (void);
+
 void parmasan_socket_deinitialize (void);
 void parmasan_socket_report_dependency (const char *target,
                                         const char *dependency);

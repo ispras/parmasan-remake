@@ -456,6 +456,7 @@ static const struct command_switch switches[] =
     { CHAR_MAX+14, strlist, &debugger_opts, 1, 1, 0, "preaction", 0,
       "debugger-stop" },
     { CHAR_MAX+15, filename, &profile_dir_opt, 1, 1, 0, 0, 0, "profile-directory" },
+    { CHAR_MAX+16, string, &parmasan_strategy, 1, 1, 0, 0, 0, "parmasan-strategy" },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
   };
 
@@ -1667,8 +1668,7 @@ main (int argc, const char **argv, char **envp)
   define_variable_cname ("CURDIR", current_directory, o_file, 0);
 
   /* Connect to parmasan daemon. */
-  open_parmasan_socket();
-  parmasan_socket_send_init_packet();
+  init_parmasan ();
 
   /* Read any stdin makefiles into temporary files.  */
 
