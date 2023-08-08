@@ -126,7 +126,6 @@ parmasan_socket_deinitialize (void)
   if (parmasan_socket == -1)
       return;
 
-  parmasan_socket_send_done_packet ();
   close (parmasan_socket);
   parmasan_socket = -1;
 }
@@ -168,20 +167,6 @@ parmasan_socket_report_target_pid (pid_t pid, const char *name)
 
   parmasan_socket_send (parmasan_socket_buffer, len);
   parmasan_wait_for_acknowledge_packet ();
-}
-
-void
-parmasan_socket_send_done_packet (void)
-{
-  int len = 0;
-  if (parmasan_socket == -1)
-      return;
-
-  len += snprintf (parmasan_socket_buffer, sizeof (parmasan_socket_buffer),
-                   MAKE_MESSAGE_PREFIX "%7d %s", getpid (),
-                   FINISH_MESSAGE);
-
-  parmasan_socket_send (parmasan_socket_buffer, len);
 }
 
 void
