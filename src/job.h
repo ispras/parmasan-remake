@@ -82,7 +82,8 @@ extern void start_waiting_jobs (target_stack_node_t *p_call_stack);
 char **construct_command_argv (char *line, char **restp, struct file *file,
                                int cmd_flags, char** batch_file);
 
-pid_t child_execute_job (struct childbase *child, int good_stdin, char **argv);
+pid_t child_execute_job (struct childbase *child, int good_stdin, char **argv,
+			 char* target_name);
 
 // void exec_command (char **argv, char **envp) NORETURN;
 void exec_command (char **argv, char **envp);

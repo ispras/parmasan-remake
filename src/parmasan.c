@@ -154,14 +154,14 @@ parmasan_socket_report_dependency (const char *target, const char *dependency)
 }
 
 void
-parmasan_socket_report_target_pid (pid_t pid, const char *name)
+parmasan_socket_report_target_pid (pid_t ppid, pid_t pid, const char *name)
 {
   int len = 0;
   if (parmasan_socket == -1)
     return;
 
   len += snprintf (parmasan_socket_buffer, sizeof (parmasan_socket_buffer),
-                   MAKE_MESSAGE_PREFIX "%7d %s %zu %s %d", getpid (),
+                   MAKE_MESSAGE_PREFIX "%7d %s %zu %s %d", ppid,
                    TARGET_PID_MESSAGE, strlen (name),
                    name, pid);
 

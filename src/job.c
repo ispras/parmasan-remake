@@ -1278,8 +1278,8 @@ start_job_command (child_t *child,
       jobserver_pre_child (flags & COMMANDS_RECURSE);
 
       child->pid = child_execute_job ((struct childbase *)child,
-                                      child->good_stdin, argv);
-      parmasan_socket_report_target_pid(child->pid, child->file->name);
+                                      child->good_stdin, argv,
+                                      child->file->name);
 
       environ = parent_environ; /* Restore value child may have clobbered.  */
       jobserver_post_child (flags & COMMANDS_RECURSE);
@@ -2000,12 +2000,13 @@ start_waiting_jobs (target_stack_node_t *p_call_stack)
    Create a child process executing the command in ARGV.
    Returns the PID or -1.  */
 pid_t
-child_execute_job (struct childbase *child, int good_stdin, char **argv)
+child_execute_job (struct childbase *child, int good_stdin, char **argv, char* target_name)
 {
   const int fdin = good_stdin ? FD_STDIN : get_bad_stdin ();
   int fdout = FD_STDOUT;
   int fderr = FD_STDERR;
   pid_t pid;
+  pid_t ppid = getpid();
   int r;
 #if defined(USE_POSIX_SPAWN)
   char *cmd;
@@ -2028,6 +2029,8 @@ child_execute_job (struct childbase *child, int good_stdin, char **argv)
   pid = vfork();
   if (pid != 0)
     return pid;
+  else if (target_name)
+    parmasan_socket_report_target_pid(ppid, getpid(), target_name);
 
   /* We are the child.  */
   unblock_all_sigs ();
@@ -2051,6 +2054,8 @@ child_execute_job (struct childbase *child, int good_stdin, char **argv)
   exec_command (argv, child->environment);
 
 #else /* USE_POSIX_SPAWN */
+
+#error USE_POSIX_SPAWN is not compatible with parmasan
 
   if ((r = posix_spawnattr_init (&attr)) != 0)
     goto done;
