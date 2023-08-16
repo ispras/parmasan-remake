@@ -150,6 +150,8 @@ update_goal_chain (struct goaldep *goaldeps)
                  actually run.  */
               ocommands_started = commands_started;
 
+	      parmasan_socket_report_goal(file->name);
+
 	      fail = update_file (file, rebuilding_makefiles ? 1 : 0, NULL);
               check_renamed (file);
 

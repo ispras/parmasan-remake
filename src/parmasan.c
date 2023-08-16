@@ -16,6 +16,7 @@ static int parmasan_socket = -1;
 #define MAKE_MESSAGE_PREFIX "MAKE   "
 #define TARGET_PID_MESSAGE   "TARGET_PID   "
 #define DEPENDENCY_MESSAGE   "DEPENDENCY   "
+#define GOAL_MESSAGE         "GOAL         "
 #define FINISH_MESSAGE       "FINISH       "
 
 const char* parmasan_env_var = "PARMASAN_DAEMON_FD";
@@ -164,6 +165,22 @@ parmasan_socket_report_target_pid (pid_t ppid, pid_t pid, const char *name)
                    MAKE_MESSAGE_PREFIX "%7d %s %zu %s %d", ppid,
                    TARGET_PID_MESSAGE, strlen (name),
                    name, pid);
+
+  parmasan_socket_send (parmasan_socket_buffer, len);
+  parmasan_wait_for_acknowledge_packet ();
+}
+
+void
+parmasan_socket_report_goal(const char* name)
+{
+  int len = 0;
+  if (parmasan_socket == -1)
+	 return;
+
+  len += snprintf (parmasan_socket_buffer, sizeof (parmasan_socket_buffer),
+		   MAKE_MESSAGE_PREFIX "%7d %s %zu %s", getpid (),
+		   GOAL_MESSAGE, strlen (name),
+		   name);
 
   parmasan_socket_send (parmasan_socket_buffer, len);
   parmasan_wait_for_acknowledge_packet ();
