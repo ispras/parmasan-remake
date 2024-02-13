@@ -2030,7 +2030,7 @@ child_execute_job (struct childbase *child, int good_stdin, char **argv, char* t
   if (pid != 0)
     return pid;
   else if (target_name)
-    parmasan_socket_report_target_pid(ppid, getpid(), target_name);
+    parmasan_socket_report_target_pid(getpid(), target_name);
 
   /* We are the child.  */
   unblock_all_sigs ();
