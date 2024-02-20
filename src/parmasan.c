@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <sys/unistd.h>
+#include <unistd.h>
 
 #define PARMASAN_SYNC        "SYNC  "
 #define PARMASAN_ASYNC       "ASYNC "
